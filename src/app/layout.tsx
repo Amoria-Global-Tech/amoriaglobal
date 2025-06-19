@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './styles/globals.css'
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import VisitorTracker from './components/visiterTracker';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -76,16 +77,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        {/* Bootstrap Icons CDN */}
-       
-        {/* Favicon and Apple Touch Icons */}
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#3b82f6" />
-        
-        {/* Preload critical fonts */}
         <link
           rel="preload"
           href="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2"
@@ -95,22 +91,10 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} antialiased`}>
+        <VisitorTracker />
         <div id="root">
           {children}
         </div>
-        
-        {/* Scroll behavior polyfill for older browsers */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if (!('scrollBehavior' in document.documentElement.style)) {
-                const script = document.createElement('script');
-                script.src = 'https://cdn.jsdelivr.net/gh/iamdustan/smoothscroll@master/src/smoothscroll.js';
-                document.head.appendChild(script);
-              }
-            `,
-          }}
-        />
       </body>
     </html>
   )

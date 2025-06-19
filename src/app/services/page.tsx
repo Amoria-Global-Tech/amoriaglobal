@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import Chatbot from '../components/Chatbot';
 import Navbar from '../components/navbar';
 import Footer from '../components/footer';
@@ -10,22 +9,52 @@ export default function ServicesPage() {
  
   const services = [
     {
-      title: 'Web Portals',
-      description: 'Custom web portal development and management solutions that provide secure access to information and services for your users with advanced security features.',
+      title: 'Web Development',
+      description: 'Modern, scalable web solutions from landing pages to complex web applications. We build responsive, fast-loading websites that convert visitors into customers.',
       icon: '🌐',
-      features: ['Custom portal design', 'User authentication', 'Content management', 'Responsive design']
+      features: ['Responsive design', 'E-commerce integration', 'CMS development', 'Performance optimization', 'SEO-ready structure']
     },
     {
-      title: 'Computer Programming',
-      description: 'Professional software development services using cutting-edge technologies to build scalable and efficient applications tailored to your business needs.',
+      title: 'Mobile App Development',
+      description: 'Native and cross-platform mobile applications that deliver seamless user experiences across iOS and Android devices.',
+      icon: '📱',
+      features: ['iOS development', 'Android development', 'Cross-platform apps', 'App store deployment', 'Mobile-first design']
+    },
+    {
+      title: 'Desktop Applications Development',
+      description: 'Robust desktop software solutions for Windows, macOS, and Linux that streamline business operations and enhance productivity.',
       icon: '💻',
-      features: ['Custom software development', 'Full-stack solutions', 'API integration', 'Code optimization']
+      features: ['Cross-platform compatibility', 'Enterprise integration', 'Offline functionality', 'System optimization', 'User-friendly interfaces']
     },
     {
-      title: 'Computer Consultancy & Facilities Management',
-      description: 'Expert IT consultancy and comprehensive computer facilities management to optimize your technology infrastructure and reduce operational costs.',
+      title: 'SEO Optimization',
+      description: 'Data-driven search engine optimization strategies that improve rankings, increase organic traffic, and boost online visibility.',
+      icon: '🚀',
+      features: ['Technical SEO', 'Content strategy', 'Local optimization', 'Performance audits', 'Analytics tracking']
+    },
+    {
+      title: 'IT Consultation',
+      description: 'Strategic technology guidance to help businesses make informed decisions about digital transformation and infrastructure planning.',
       icon: '🔧',
-      features: ['IT consulting', 'Infrastructure management', 'System optimization', 'Technical support']
+      features: ['Technology assessment', 'Digital strategy', 'Infrastructure planning', 'Process optimization', 'Risk evaluation']
+    },
+    {
+      title: 'Custom Software Solutions',
+      description: 'Bespoke software development tailored to unique business requirements, from automation tools to enterprise management systems.',
+      icon: '⚙️',
+      features: ['Business automation', 'System integration', 'Workflow optimization', 'Custom databases', 'Scalable architecture']
+    },
+    {
+      title: 'Cyber Security',
+      description: 'Comprehensive security solutions to protect digital assets, prevent data breaches, and ensure compliance with industry standards.',
+      icon: '🔒',
+      features: ['Security assessments', 'Threat protection', 'Data encryption', 'Compliance audits', 'Incident response']
+    },
+    {
+      title: 'Data Analysis',
+      description: 'Transform raw data into actionable business insights through advanced analytics, visualization, and business intelligence solutions.',
+      icon: '📊',
+      features: ['Business intelligence', 'Data visualization', 'Predictive modeling', 'Performance metrics', 'Decision support']
     }
   ];
 

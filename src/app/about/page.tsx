@@ -121,7 +121,7 @@ export default function AboutPage() {
             <div className="team-header">
               <h2 className="team-title">Our Team</h2>
               <p className="team-description">
-                Meet the passionate professionals behind Amoria Global Tech's innovative solutions
+                Meet the passionate professionals behind Amoria Global Tech&apos;s innovative solutions
               </p>
             </div>
 
@@ -280,7 +280,7 @@ export default function AboutPage() {
                 </div>
                 <div className="culture-item">
                   <h4>Customer-Centric</h4>
-                  <p>Every solution we create is designed with our clients' success and satisfaction as the primary focus.</p>
+                  <p>Every solution we create is designed with our clients&apos; success and satisfaction as the primary focus.</p>
                 </div>
                 <div className="culture-item">
                   <h4>Quality Excellence</h4>

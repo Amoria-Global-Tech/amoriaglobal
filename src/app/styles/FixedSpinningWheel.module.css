@@ -1,0 +1,194 @@
+/* components/FixedSpinningWheel.module.css */
+
+.wheelContainer {
+  position: fixed;
+  width: 300px;
+  height: 200px;
+  z-index: 0.00001;
+  pointer-events: none; /* Allows clicking through the wheel */
+  overflow: visible;
+}
+
+/* Position variants */
+.center {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.left {
+  left: 10%;
+}
+
+.right {
+  right: 10%;
+}
+
+.wheel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  animation: roll 12s linear infinite;
+}
+
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.85;
+  backdrop-filter: blur(1px);
+}
+
+.ring1 {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+  top: 40px;
+  left: 20px;
+  animation: spin 8s linear infinite;
+}
+
+.ring2 {
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(45deg, #1e40af 0%, #3b82f6 80%, #60a5fa 100%);
+  box-shadow: 0 0 25px rgba(30, 64, 175, 0.4);
+  top: 55px;
+  left: 140px;
+  animation: spin 10s linear infinite reverse;
+}
+
+.ring3 {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(225deg, #1d4ed8 0%, #60a5fa 50%, #93c5fd 100%);
+  box-shadow: 0 0 20px rgba(29, 78, 216, 0.3);
+  top: 50px;
+  left: 80px;
+  animation: spin 9s linear infinite;
+  opacity: 0.7;
+}
+
+.ring4 {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(315deg, #2563eb 0%, #7c3aed 60%, #a855f7 100%);
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+  top: 65px;
+  left: 200px;
+  animation: spin 6s linear infinite reverse;
+  opacity: 0.8;
+}
+
+.ring5 {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(180deg, #3730a3 0%, #4f46e5 50%, #6366f1 100%);
+  box-shadow: 0 0 15px rgba(55, 48, 163, 0.3);
+  top: 70px;
+  left: 50px;
+  animation: spin 11s linear infinite;
+  opacity: 0.6;
+}
+
+@keyframes roll {
+  0% {
+    transform: translateX(-80px);
+  }
+  100% {
+    transform: translateX(80px);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .wheelContainer {
+    width: 250px;
+    height: 160px;
+  }
+  
+  .ring1 {
+    width: 100px;
+    height: 100px;
+    top: 30px;
+    left: 15px;
+  }
+  
+  .ring2 {
+    width: 75px;
+    height: 75px;
+    top: 42px;
+    left: 115px;
+  }
+  
+  .ring3 {
+    width: 85px;
+    height: 85px;
+    top: 37px;
+    left: 65px;
+  }
+  
+  .ring4 {
+    width: 60px;
+    height: 60px;
+    top: 50px;
+    left: 160px;
+  }
+  
+  .ring5 {
+    width: 50px;
+    height: 50px;
+    top: 55px;
+    left: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .wheelContainer {
+    width: 200px;
+    height: 130px;
+  }
+  
+  .ring1 {
+    width: 80px;
+    height: 80px;
+    top: 25px;
+    left: 10px;
+  }
+  
+  .ring2 {
+    width: 60px;
+    height: 60px;
+    top: 35px;
+    left: 90px;
+  }
+  
+  .ring3 {
+    width: 70px;
+    height: 70px;
+    top: 30px;
+    left: 50px;
+  }
+  
+  .ring4 {
+    width: 50px;
+    height: 50px;
+    top: 40px;
+    left: 130px;
+  }
+  
+  .ring5 {
+    width: 40px;
+    height: 40px;
+    top: 45px;
+    left: 30px;
+  }
+}

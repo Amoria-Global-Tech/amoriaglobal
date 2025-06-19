@@ -1,9 +1,10 @@
 import Link from "next/link";
+import FixedSpinningWheel from "./FixedSpinningWheel";
 
 const Footer = () => {
     return (
         <>
-        
+      
       {/* Footer */}
       <footer className="footer">
         <div className="container">

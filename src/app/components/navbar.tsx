@@ -13,13 +13,14 @@ const Navbar = () => {
     { name: 'SERVICES', href: '/services' },
     { name: 'PRODUCTS', href: '/products'},
   ];
+  
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
-    return (
-      <>
-         {/* Navigation */}
+  return (
+    <>
+      {/* Navigation */}
       <nav className="nav-container">
         <div className="container">
           <div className="nav-wrapper">
@@ -49,27 +50,39 @@ const Navbar = () => {
               </div>
             </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              className="mobile-menu-btn"
-              onClick={toggleMobileMenu}
-              aria-label="Toggle mobile menu"
-            >
-              ☰
-            </button>
+            {/* Contact Us Button & Mobile Menu Button */}
+            <div className="nav-right">
+              {/* Contact Us Button - Desktop */}
+              <Link 
+                href="/contact" 
+                className={`contact-btn ${pathname === '/contact' ? 'active' : ''}`}
+              >
+                <i className="bi bi-envelope"></i>
+                <span>Contact Us</span>
+              </Link>
+
+              {/* Mobile Menu Button */}
+              <button
+                className="mobile-menu-btn"
+                onClick={toggleMobileMenu}
+                aria-label="Toggle mobile menu"
+              >
+                ☰
+              </button>
+            </div>
 
             {/* Enhanced Mobile Menu */}
             <div className={`mobile-menu ${mobileMenuOpen ? 'active' : ''}`}>
               <div className="mobile-menu-header">
                 {/* Logo */}
                 <Link href="/" className="logo">
-                <Image 
+                  <Image 
                     src="/logo.png" 
                     alt="Amoria Tech Global" 
                     width={200}
                     height={200}
                     priority
-                />
+                  />
                 </Link>
                 <button
                   className="mobile-menu-close"
@@ -91,6 +104,16 @@ const Navbar = () => {
                     {item.name}
                   </Link>
                 ))}
+                
+                {/* Contact Us - Mobile */}
+                <Link
+                  href="/contact"
+                  className={`mobile-menu-item contact-mobile ${pathname === '/contact' ? 'active' : ''}`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <i className="bi bi-envelope"></i>
+                  CONTACT US
+                </Link>
               </div>
 
               <div className="mobile-menu-footer">
@@ -118,7 +141,8 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-        </>
-    );
+    </>
+  );
 }
+
 export default Navbar;

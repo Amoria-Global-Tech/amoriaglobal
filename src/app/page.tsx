@@ -1,14 +1,11 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
 import Chatbot from './components/Chatbot';
 import Navbar from './components/navbar';
 import Footer from './components/footer';
 
 export default function HomePage() {
-  const [billingCycle, setBillingCycle] = useState('monthly');
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -33,24 +30,76 @@ export default function HomePage() {
     { progress: 100, status: "Welcome to Amoria Tech Global!", text: "COMPLETE" }
   ];
 
+// ORIGINAL ARRAY (3 services)
+/*
+const AmoriaOriginalServices = [
+  {
+    title: 'Web Portals',
+    description: 'Custom web portal development and management solutions that provide secure access to information and services for your users.',
+    icon: '🌐',
+    features: ['Custom portal design', 'User authentication', 'Content management', 'Responsive design']
+  },
+  {
+    title: 'Computer Programming',
+    description: 'Professional software development services using cutting-edge technologies to build scalable and efficient applications.',
+    icon: '💻',
+    features: ['Custom software development', 'Full-stack solutions', 'API integration', 'Code optimization']
+  },
+  {
+    title: 'Computer Consultancy & Facilities Management',
+    description: 'Expert IT consultancy and comprehensive computer facilities management to optimize your technology infrastructure.',
+    icon: '🔧',
+    features: ['IT consulting', 'Infrastructure management', 'System optimization', 'Technical support']
+  }
+];*/
   const originalServices = [
     {
-      title: 'Web Portals',
-      description: 'Custom web portal development and management solutions that provide secure access to information and services for your users.',
+      title: 'Web Development',
+      description: 'Modern, scalable web solutions from landing pages to complex web applications. We build responsive, fast-loading websites that convert visitors into customers.',
       icon: '🌐',
-      features: ['Custom portal design', 'User authentication', 'Content management', 'Responsive design']
+      features: ['Responsive design', 'E-commerce integration', 'CMS development', 'Performance optimization', 'SEO-ready structure']
     },
     {
-      title: 'Computer Programming',
-      description: 'Professional software development services using cutting-edge technologies to build scalable and efficient applications.',
+      title: 'Mobile App Development',
+      description: 'Native and cross-platform mobile applications that deliver seamless user experiences across iOS and Android devices.',
+      icon: '📱',
+      features: ['iOS development', 'Android development', 'Cross-platform apps', 'App store deployment', 'Mobile-first design']
+    },
+    {
+      title: 'Desktop Applications Development',
+      description: 'Robust desktop software solutions for Windows, macOS, and Linux that streamline business operations and enhance productivity.',
       icon: '💻',
-      features: ['Custom software development', 'Full-stack solutions', 'API integration', 'Code optimization']
+      features: ['Cross-platform compatibility', 'Enterprise integration', 'Offline functionality', 'System optimization', 'User-friendly interfaces']
     },
     {
-      title: 'Computer Consultancy & Facilities Management',
-      description: 'Expert IT consultancy and comprehensive computer facilities management to optimize your technology infrastructure.',
+      title: 'SEO Optimization',
+      description: 'Data-driven search engine optimization strategies that improve rankings, increase organic traffic, and boost online visibility.',
+      icon: '🚀',
+      features: ['Technical SEO', 'Content strategy', 'Local optimization', 'Performance audits', 'Analytics tracking']
+    },
+    {
+      title: 'IT Consultation',
+      description: 'Strategic technology guidance to help businesses make informed decisions about digital transformation and infrastructure planning.',
       icon: '🔧',
-      features: ['IT consulting', 'Infrastructure management', 'System optimization', 'Technical support']
+      features: ['Technology assessment', 'Digital strategy', 'Infrastructure planning', 'Process optimization', 'Risk evaluation']
+    },
+    {
+      title: 'Custom Software Solutions',
+      description: 'Bespoke software development tailored to unique business requirements, from automation tools to enterprise management systems.',
+      icon: '⚙️',
+      features: ['Business automation', 'System integration', 'Workflow optimization', 'Custom databases', 'Scalable architecture']
+    },
+    {
+      title: 'Cyber Security',
+      description: 'Comprehensive security solutions to protect digital assets, prevent data breaches, and ensure compliance with industry standards.',
+      icon: '🔒',
+      features: ['Security assessments', 'Threat protection', 'Data encryption', 'Compliance audits', 'Incident response']
+    },
+    {
+      title: 'Data Analysis',
+      description: 'Transform raw data into actionable business insights through advanced analytics, visualization, and business intelligence solutions.',
+      icon: '📊',
+      features: ['Business intelligence', 'Data visualization', 'Predictive modeling', 'Performance metrics', 'Decision support']
     }
   ];
 
@@ -193,7 +242,7 @@ export default function HomePage() {
         setTimeout(() => {
           setIsTransitioning(true);
         }, 50);
-      }, 500);
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [currentSlide, originalServices.length, mounted, isClient]);
@@ -368,7 +417,7 @@ export default function HomePage() {
             </h1>
             <p className="hero-animated-subtitle">
               Empowering businesses with cutting-edge solutions that drive digital transformation 
-              and create lasting value in tomorrow's connected world.
+              and create lasting value in tomorrow&apos;s connected world.
             </p>
           </section>
           
@@ -379,7 +428,7 @@ export default function HomePage() {
                 className="action-btn member-btn"
                 onClick={() => scrollToElement('services-section')}
               >
-                Become a Member
+                Explore our services
               </button>
               <button 
                 className="action-btn started-btn"

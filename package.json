@@ -9,8 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@getbrevo/brevo": "^2.2.0",
     "bootstrap-icons": "^1.13.1",
     "next": "15.3.3",
+    "pg": "^8.16.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
