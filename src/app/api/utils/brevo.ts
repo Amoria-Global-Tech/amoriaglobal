@@ -1,8 +1,8 @@
 const brevo = require('@getbrevo/brevo');
-let apiInstance = new brevo.TransactionalEmailsApi();
+const apiInstance = new brevo.TransactionalEmailsApi();
 
 export async function sendContactEmail(email: string, message: string, name: string): Promise<void> {
-    let apiKey = apiInstance.authentications['apiKey'];
+    const apiKey = apiInstance.authentications['apiKey'];
     apiKey.apiKey = process.env.BREVO_API_KEY;
     
     let sendSmtpEmail = new brevo.SendSmtpEmail();
@@ -97,10 +97,8 @@ export async function sendContactEmail(email: string, message: string, name: str
   export async function sendContactReply(
     recipientEmail: string, 
     recipientName: string, 
-    originalMessage?: string,
-    customResponse?: string
   ): Promise<void> {
-    let apiKey = apiInstance.authentications['apiKey'];
+    const apiKey = apiInstance.authentications['apiKey'];
     apiKey.apiKey = process.env.BREVO_API_KEY;
     
     let sendSmtpEmail = new brevo.SendSmtpEmail();

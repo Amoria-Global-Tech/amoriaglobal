@@ -177,10 +177,3 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 }
 
-// Handle GET request (optional - for testing)
-export async function GET(req: NextRequest): Promise<NextResponse> {
-  return NextResponse.json({
-    message: "Contact form endpoint is working. Use POST to submit messages.",
-    timestamp: new Date().toISOString()
-  });
-}

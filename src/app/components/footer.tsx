@@ -1,5 +1,4 @@
 import Link from "next/link";
-import FixedSpinningWheel from "./FixedSpinningWheel";
 
 const Footer = () => {
     return (
