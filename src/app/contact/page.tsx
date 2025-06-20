@@ -56,7 +56,7 @@ export default function ContactUsPage() {
         setError(result.message || 'Failed to send message. Please try again.');
       }
     } catch (err) {
-      setError('Network error. Please check your connection and try again.');
+      setError('Network error. Please check your connection and try again.: '+err);
     } finally {
       setIsSubmitting(false);
     }
