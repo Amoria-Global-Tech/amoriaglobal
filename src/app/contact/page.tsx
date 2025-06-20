@@ -24,8 +24,7 @@ export default function ContactUsPage() {
   const [error, setError] = useState<string | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [visibleItems, setVisibleItems] = useState<number[]>([]);
-  
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -102,7 +101,7 @@ export default function ContactUsPage() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const index = parseInt(entry.target.getAttribute('data-index') || '0');
-            setVisibleItems(prev => [...prev, index]);
+           // setVisibleItems(prev => [...prev, index]);
           }
         });
       },
