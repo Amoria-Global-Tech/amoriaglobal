@@ -1,13 +1,14 @@
 'use client';
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
-export default function VisitorTracker() {
+// Separate component that uses useSearchParams
+function TrackerCore() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const trackedPages = useRef(new Set<string>());
-  const debounceTimer = useRef<NodeJS.Timeout>(null);
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
   const isTracking = useRef(false);
 
   const trackVisitor = useCallback(async (pageUrl: string) => {
@@ -23,7 +24,7 @@ export default function VisitorTracker() {
           page_url: pathname,
           timestamp: new Date().toISOString(),
           pathname: pathname,
-          search: searchParams.toString()
+          search: searchParams?.toString() || ''
         }),
       });
 
@@ -102,4 +103,13 @@ export default function VisitorTracker() {
   }, [debouncedTrack]);
 
   return null;
+}
+
+// Main component wrapped with Suspense
+export default function VisitorTracker() {
+  return (
+    <Suspense fallback={null}>
+      <TrackerCore />
+    </Suspense>
+  );
 }
