@@ -55,7 +55,7 @@ export default function ContactUsPage() {
       } else {
         setError(result.message || 'Failed to send message. Please try again.');
       }
-    } catch (err) {
+    } catch {
       setError('Network error. Please check your connection and try again.');
     } finally {
       setIsSubmitting(false);
@@ -100,8 +100,8 @@ export default function ContactUsPage() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const index = parseInt(entry.target.getAttribute('data-index') || '0');
             // Animation logic can be added here if needed
+            // For example: entry.target.classList.add('visible');
           }
         });
       },
