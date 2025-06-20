@@ -4166,3 +4166,49 @@ textarea:focus {
     font-size: 4rem;
   }
 }
+.not-found-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.not-found-content {
+  text-align: center;
+  max-width: 500px;
+}
+
+.not-found-title {
+  font-size: 6rem;
+  font-weight: bold;
+  margin: 0;
+  color: #333;
+}
+
+.not-found-subtitle {
+  font-size: 2rem;
+  margin: 1rem 0;
+  color: #666;
+}
+
+.not-found-description {
+  font-size: 1.1rem;
+  color: #777;
+  margin-bottom: 2rem;
+}
+
+.not-found-button {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  background-color: #0070f3;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.not-found-button:hover {
+  background-color: #0051cc;
+}
