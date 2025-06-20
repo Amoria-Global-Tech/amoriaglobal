@@ -56,7 +56,7 @@ export default function ContactUsPage() {
         setError(result.message || 'Failed to send message. Please try again.');
       }
     } catch (err) {
-      setError('Network error. Please check your connection and try again.: '+err);
+      setError('Network error. Please check your connection and try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -101,7 +101,7 @@ export default function ContactUsPage() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const index = parseInt(entry.target.getAttribute('data-index') || '0');
-           // setVisibleItems(prev => [...prev, index]);
+            // Animation logic can be added here if needed
           }
         });
       },
@@ -116,7 +116,7 @@ export default function ContactUsPage() {
 
   // Don't render until mounted to prevent hydration issues
   if (!mounted) {
-    return <div></div>;
+    return null;
   }
   
   if (submitted) {
