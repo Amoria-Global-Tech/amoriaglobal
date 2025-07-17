@@ -10,10 +10,10 @@ export default function ProductsPage() {
   const products = [
     {
       title: 'Amoria Connect',
-      description: 'Comming soon',
+      description: 'Comming Soon',
       icon: '🎪',
       features: [''],
-      fullDescription: ''
+      fullDescription: ' '
     }
   ];
 
@@ -86,15 +86,6 @@ export default function ProductsPage() {
                   <div className="product-page-content">
                     <h3 className="product-page-title">{product.title}</h3>
                     <p className="product-page-description">{product.fullDescription}</p>
-                    
-                    <ul className="product-page-features">
-                      {product.features.map((feature, i) => (
-                        <li key={i} className="product-page-feature">
-                          <span className="feature-check">✓</span>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
                     
                     <div className="product-page-buttons">
                       <button className="product-buy-btn" disabled>
