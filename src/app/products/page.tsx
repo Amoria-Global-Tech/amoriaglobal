@@ -10,7 +10,7 @@ export default function ProductsPage() {
   const products = [
     {
       title: 'Amoria Connect',
-      description: 'Connect people globally through virtual events including weddings, concerts, conferences, and celebrations for those unable to attend in person.',
+      description: 'Comming Soon',
       icon: '🎪',
       features: ['Virtual event hosting', 'Global connectivity', 'HD streaming quality', 'Interactive participation'],
       fullDescription: 'Our comprehensive virtual event platform enables you to host all kinds of events online including weddings, concerts, conferences, and special celebrations, connecting people who are unable to attend them physically.'
@@ -87,17 +87,8 @@ export default function ProductsPage() {
                     <h3 className="product-page-title">{product.title}</h3>
                     <p className="product-page-description">{product.fullDescription}</p>
                     
-                    <ul className="product-page-features">
-                      {product.features.map((feature, i) => (
-                        <li key={i} className="product-page-feature">
-                          <span className="feature-check">✓</span>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                    
                     <div className="product-page-buttons">
-                      <button className="product-buy-btn">
+                      <button className="product-buy-btn" disabled>
                         Explore
                       </button>
                     </div>
