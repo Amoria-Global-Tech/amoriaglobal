@@ -10,10 +10,10 @@ export default function ProductsPage() {
   const products = [
     {
       title: 'Amoria Connect',
-      description: 'Connect people globally through virtual events including weddings, concerts, conferences, and celebrations for those unable to attend in person.',
+      description: 'Comming soon',
       icon: '🎪',
-      features: ['Virtual event hosting', 'Global connectivity', 'HD streaming quality', 'Interactive participation'],
-      fullDescription: 'Our comprehensive virtual event platform enables you to host all kinds of events online including weddings, concerts, conferences, and special celebrations, connecting people who are unable to attend them physically.'
+      features: [''],
+      fullDescription: ''
     }
   ];
 
@@ -97,7 +97,7 @@ export default function ProductsPage() {
                     </ul>
                     
                     <div className="product-page-buttons">
-                      <button className="product-buy-btn">
+                      <button className="product-buy-btn" disabled>
                         Explore
                       </button>
                     </div>
