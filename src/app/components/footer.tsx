@@ -61,7 +61,7 @@ const Footer = () => {
                   <i className="bi bi-facebook"></i>
                 </a>
                 <a 
-                  href="https://instagram.com/amoria.globaltech?igsh=bjhsN3NrYTU2c2t5" 
+                  href="https://www.instagram.com/amoria_global_tech/" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="social-link instagram"
@@ -77,7 +77,7 @@ const Footer = () => {
                   <i className="bi bi-twitter-x"></i>
                 </a>
                 <a 
-                  href="https://linkedin.com/in/amoria-global-tech-8a774736b" 
+                  href="https://www.linkedin.com/in/amoria-global-tech-8a774736b/" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="social-link linkedin"

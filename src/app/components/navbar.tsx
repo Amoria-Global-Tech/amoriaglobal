@@ -121,13 +121,13 @@ const Navbar = () => {
                   <a href="https://facebook.com/share/1Ga8spfH7y/?mibextid=wwXIfr" className="mobile-social-link" target="_blank" rel="noopener noreferrer">
                     <i className="bi bi-facebook"></i>
                   </a>
-                  <a href="https://instagram.com/amoria.globaltech?igsh=bjhsN3NrYTU2c2t5" className="mobile-social-link" target="_blank" rel="noopener noreferrer">
+                  <a href="https://www.instagram.com/amoria_global_tech/" className="mobile-social-link" target="_blank" rel="noopener noreferrer">
                     <i className="bi bi-instagram"></i>
                   </a>
                   <a href="https://x.com/amoria32419" className="mobile-social-link" target="_blank" rel="noopener noreferrer">
                     <i className="bi bi-twitter-x"></i>
                   </a>
-                  <a href="https://linkedin.com/in/amoria-global-tech-8a774736b" className="mobile-social-link" target="_blank" rel="noopener noreferrer">
+                  <a href="https://www.linkedin.com/in/amoria-global-tech-8a774736b/" className="mobile-social-link" target="_blank" rel="noopener noreferrer">
                     <i className="bi bi-linkedin"></i>
                   </a>
                 </div>
