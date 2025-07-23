@@ -5,24 +5,58 @@ import Chatbot from './components/Chatbot';
 import Navbar from './components/navbar';
 import Footer from './components/footer';
 
+// Type definitions
+interface Product {
+  id: string | number;
+  name: string;
+  description: string;
+  category: string;
+  price?: string | number;
+  image_url?: string;
+  is_available: boolean;
+}
+
+interface Service {
+  title: string;
+  description: string;
+  icon: string;
+  features: string[];
+}
+
+interface LoadingStage {
+  progress: number;
+  status: string;
+  text: string;
+}
+
+interface ApiResponse {
+  products?: Product[];
+}
+
 export default function HomePage() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(true);
-  const [showScrollTop, setShowScrollTop] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const [typingText, setTypingText] = useState('');
-  const [loadingProgress, setLoadingProgress] = useState(0);
-  const [loadingStatus, setLoadingStatus] = useState('Starting system...');
-  const [loadingText, setLoadingText] = useState('INITIALIZING');
-  const [preloaderReady, setPreloaderReady] = useState(false);
-  const [hasShownPreloader, setHasShownPreloader] = useState(false);
-  const [isClient, setIsClient] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState<number>(0);
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(true);
+  const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
+  const [mounted, setMounted] = useState<boolean>(false);
+  const [typingText, setTypingText] = useState<string>('');
+  const [loadingProgress, setLoadingProgress] = useState<number>(0);
+  const [loadingStatus, setLoadingStatus] = useState<string>('Starting system...');
+  const [loadingText, setLoadingText] = useState<string>('INITIALIZING');
+  const [preloaderReady, setPreloaderReady] = useState<boolean>(false);
+  const [hasShownPreloader, setHasShownPreloader] = useState<boolean>(false);
+  const [isClient, setIsClient] = useState<boolean>(false);
   const [stars, setStars] = useState<React.ReactElement[]>([]);
   const [particles, setParticles] = useState<React.ReactElement[]>([]);
+  
+  // API-related state
+  const [products, setProducts] = useState<Product[]>([]);
+  const [productsLoading, setProductsLoading] = useState<boolean>(true);
+  const [productsError, setProductsError] = useState<string | null>(null);
+  
   const trackRef = useRef<HTMLDivElement>(null);
 
   // Loading stages for the preloader - 20% increments
-  const loadingStages = [
+  const loadingStages: LoadingStage[] = [
     { progress: 20, status: "Loading core modules...", text: "LOADING" },
     { progress: 40, status: "Establishing connections...", text: "CONNECTING" },
     { progress: 60, status: "Syncing global data...", text: "SYNCING" },
@@ -30,29 +64,7 @@ export default function HomePage() {
     { progress: 100, status: "Welcome to Amoria Tech Global!", text: "COMPLETE" }
   ];
 
-// ORIGINAL ARRAY (3 services)
-/*
-const AmoriaOriginalServices = [
-  {
-    title: 'Web Portals',
-    description: 'Custom web portal development and management solutions that provide secure access to information and services for your users.',
-    icon: '🌐',
-    features: ['Custom portal design', 'User authentication', 'Content management', 'Responsive design']
-  },
-  {
-    title: 'Computer Programming',
-    description: 'Professional software development services using cutting-edge technologies to build scalable and efficient applications.',
-    icon: '💻',
-    features: ['Custom software development', 'Full-stack solutions', 'API integration', 'Code optimization']
-  },
-  {
-    title: 'Computer Consultancy & Facilities Management',
-    description: 'Expert IT consultancy and comprehensive computer facilities management to optimize your technology infrastructure.',
-    icon: '🔧',
-    features: ['IT consulting', 'Infrastructure management', 'System optimization', 'Technical support']
-  }
-];*/
-  const originalServices = [
+  const originalServices: Service[] = [
     {
       title: 'Web Development',
       description: 'Modern, scalable web solutions from landing pages to complex web applications. We build responsive, fast-loading websites that convert visitors into customers.',
@@ -103,11 +115,65 @@ const AmoriaOriginalServices = [
     }
   ];
 
+  // Fetch products from API
+  useEffect((): void => {
+    const fetchProducts = async (): Promise<void> => {
+      try {
+        setProductsLoading(true);
+        const response: Response = await fetch('/api/products');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data: Product[] | ApiResponse = await response.json();
+        
+        // Handle different API response formats
+        if (Array.isArray(data)) {
+          setProducts(data);
+        } else if (data && 'products' in data && Array.isArray(data.products)) {
+          setProducts(data.products);
+        } else {
+          setProducts([]);
+        }
+      } catch (err: unknown) {
+        console.error('Error fetching products:', err);
+        const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+        setProductsError(`Failed to load products: ${errorMessage}. Please try again later.`);
+      } finally {
+        setProductsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // Helper function to get product icon based on category or name
+  const getProductIcon = (product: Product): string => {
+    if (product.category === 'Photo & Video') return '🎪';
+    if (product.name.toLowerCase().includes('connect')) return '🎪';
+    if (product.category === 'Software') return '💻';
+    if (product.category === 'Security') return '🔒';
+    return '📦'; // Default icon
+  };
+
+  /* Format price display
+  const formatPrice = (price: string | number): string => {
+    const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
+    return numericPrice.toLocaleString();
+  }; */
+
+  // Handle image error
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>): void => {
+    const target = e.target as HTMLImageElement;
+    target.style.display = 'none';
+  };
+
   // Initial client-side mount
-  useEffect(() => {
+  useEffect((): void => {
     setIsClient(true);
     
-    const hasShown = typeof window !== 'undefined' ? sessionStorage.getItem('preloaderShown') : null;
+    const hasShown: string | null = typeof window !== 'undefined' ? sessionStorage.getItem('preloaderShown') : null;
     if (hasShown) {
       setHasShownPreloader(true);
       setMounted(true);
@@ -117,14 +183,14 @@ const AmoriaOriginalServices = [
   }, []);
 
   // Preloader animation logic - only runs if not shown before
-  useEffect(() => {
+  useEffect((): (() => void) | void => {
     if (!preloaderReady || hasShownPreloader || !isClient) return;
 
     let currentStage = 0;
 
-    const updateProgress = () => {
+    const updateProgress = (): void => {
       if (currentStage < loadingStages.length) {
-        const stage = loadingStages[currentStage];
+        const stage: LoadingStage = loadingStages[currentStage];
         
         // Jump directly to the target percentage
         setLoadingProgress(stage.progress);
@@ -132,7 +198,7 @@ const AmoriaOriginalServices = [
         setLoadingText(stage.text);
         
         if (stage.progress === 100) {
-          setTimeout(() => {
+          setTimeout((): void => {
             setMounted(true);
             if (typeof window !== 'undefined') {
               sessionStorage.setItem('preloaderShown', 'true');
@@ -145,15 +211,15 @@ const AmoriaOriginalServices = [
       }
     };
 
-    const timer = setTimeout(updateProgress, 1000);
-    return () => clearTimeout(timer);
-  }, [preloaderReady, hasShownPreloader, isClient]);
+    const timer: NodeJS.Timeout = setTimeout(updateProgress, 1000);
+    return (): void => clearTimeout(timer);
+  }, [preloaderReady, hasShownPreloader, isClient, loadingStages]);
 
   // Create stars and particles after hydration to avoid hydration issues
-  useEffect(() => {
+  useEffect((): void => {
     if (!preloaderReady || hasShownPreloader || !isClient) return;
 
-    const starsArray = [];
+    const starsArray: React.ReactElement[] = [];
     for (let i = 0; i < 100; i++) {
       starsArray.push(
         <div
@@ -172,7 +238,7 @@ const AmoriaOriginalServices = [
     setStars(starsArray);
 
     // Create particles
-    const particlesArray = [];
+    const particlesArray: React.ReactElement[] = [];
     for (let i = 0; i < 8; i++) {
       particlesArray.push(
         <div
@@ -190,10 +256,10 @@ const AmoriaOriginalServices = [
   }, [preloaderReady, hasShownPreloader, isClient]);
 
   // Show/hide scroll-to-top button (only after mount)
-  useEffect(() => {
+  useEffect((): (() => void) | void => {
     if (!mounted || !isClient) return;
 
-    const handleScroll = () => {
+    const handleScroll = (): void => {
       if (typeof window !== 'undefined') {
         if (window.scrollY > 300) {
           setShowScrollTop(true);
@@ -204,11 +270,11 @@ const AmoriaOriginalServices = [
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    return (): void => window.removeEventListener('scroll', handleScroll);
   }, [mounted, isClient]);
 
   // Scroll to top function
-  const scrollToTop = () => {
+  const scrollToTop = (): void => {
     if (typeof window !== 'undefined') {
       window.scrollTo({
         top: 0,
@@ -218,44 +284,44 @@ const AmoriaOriginalServices = [
   };
 
   // Create infinite array by duplicating services
-  const services = [...originalServices, ...originalServices];
+  const services: Service[] = [...originalServices, ...originalServices];
 
   // Auto-sliding functionality with infinite loop (only after mount)
-  useEffect(() => {
+  useEffect((): (() => void) | void => {
     if (!mounted || !isClient) return;
 
-    const interval = setInterval(() => {
+    const interval: NodeJS.Timeout = setInterval((): void => {
       setCurrentSlide(prev => prev + 1);
     }, 4000);
 
-    return () => clearInterval(interval);
+    return (): void => clearInterval(interval);
   }, [mounted, isClient]);
 
   // Handle infinite loop reset
-  useEffect(() => {
+  useEffect((): (() => void) | void => {
     if (!mounted || !isClient) return;
 
     if (currentSlide >= originalServices.length) {
-      const timer = setTimeout(() => {
+      const timer: NodeJS.Timeout = setTimeout((): void => {
         setIsTransitioning(false);
         setCurrentSlide(0);
-        setTimeout(() => {
+        setTimeout((): void => {
           setIsTransitioning(true);
         }, 50);
       }, 3000);
-      return () => clearTimeout(timer);
+      return (): void => clearTimeout(timer);
     }
   }, [currentSlide, originalServices.length, mounted, isClient]);
 
   // Fixed typing animation using React state instead of DOM manipulation
-  useEffect(() => {
+  useEffect((): (() => void) | void => {
     if (!mounted || !isClient) return;
 
     const word = 'Technology';
     let charIndex = 0;
     let isDeleting = false;
 
-    const typeWriter = () => {
+    const typeWriter = (): void => {
       if (isDeleting) {
         setTypingText(word.substring(0, charIndex - 1));
         charIndex--;
@@ -279,15 +345,16 @@ const AmoriaOriginalServices = [
       setTimeout(typeWriter, isDeleting ? 100 : 150);
     };
 
-    const timer = setTimeout(typeWriter, 1000);
-    return () => clearTimeout(timer);
+    const timer: NodeJS.Timeout = setTimeout(typeWriter, 1000);
+    return (): void => clearTimeout(timer);
   }, [mounted, isClient]);
+
   // Navigation functions
-  const nextSlide = () => {
+  const nextSlide = (): void => {
     if (currentSlide >= originalServices.length - 1) {
       setIsTransitioning(false);
       setCurrentSlide(0);
-      setTimeout(() => {
+      setTimeout((): void => {
         setIsTransitioning(true);
         setCurrentSlide(1);
       }, 50);
@@ -296,11 +363,11 @@ const AmoriaOriginalServices = [
     }
   };
 
-  const prevSlide = () => {
+  const prevSlide = (): void => {
     if (currentSlide <= 0) {
       setIsTransitioning(false);
       setCurrentSlide(originalServices.length);
-      setTimeout(() => {
+      setTimeout((): void => {
         setIsTransitioning(true);
         setCurrentSlide(originalServices.length - 1);
       }, 50);
@@ -309,14 +376,14 @@ const AmoriaOriginalServices = [
     }
   };
 
-  const goToSlide = (index: number) => {
+  const goToSlide = (index: number): void => {
     setCurrentSlide(index);
   };
 
   // Safe scroll into view function
-  const scrollToElement = (elementId: string) => {
+  const scrollToElement = (elementId: string): void => {
     if (typeof document !== 'undefined') {
-      const element = document.getElementById(elementId);
+      const element: HTMLElement | null = document.getElementById(elementId);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
       }
@@ -449,22 +516,77 @@ const AmoriaOriginalServices = [
                 </p>
               </div>
 
-              <div className="products-grid">
-                <div className="product-card">
-                  <div className="product-icon">
-                    <span>🎪</span>
-                  </div>
-                  <div className="product-content">
-                    <h3 className="product-title">Amoria Connect</h3>
-                    <p className="product-description">
-                      Connect people globally through virtual events including weddings, concerts, conferences, and celebrations for those unable to attend in person.
-                    </p>
-                    <button className="product-price-btn">Explore</button>
-                  </div>
+              {/* Loading State */}
+              {productsLoading && (
+                <div className="products-loading" style={{ textAlign: 'center', padding: '2rem' }}>
+                  <p style={{ color: 'white', fontSize: '1.1rem' }}>Loading products...</p>
                 </div>
-              </div>
+              )}
+
+              {/* Error State */}
+              {productsError && (
+                <div className="products-error" style={{ textAlign: 'center', padding: '2rem' }}>
+                  <p style={{ color: '#ff6b6b', fontSize: '1.1rem' }}>{productsError}</p>
+                </div>
+              )}
+
+              {/* No Products State */}
+              {!productsLoading && !productsError && products.length === 0 && (
+                <div className="no-products" style={{ textAlign: 'center', padding: '2rem' }}>
+                  <p style={{ color: 'white', fontSize: '1.1rem' }}>No products available at the moment.</p>
+                </div>
+              )}
+
+              {/* Products Grid */}
+              {!productsLoading && !productsError && products.length > 0 && (
+                <div className="products-grid">
+                  {products.map((product: Product) => (
+                    <div key={product.id} className="product-card">
+                      <div className="product-icon">
+                        <span>{getProductIcon(product)}</span>
+                      </div>
+                      
+                      {/* Product Image */}
+                      {product.image_url && (
+                        <div className="product-image" style={{ margin: '1rem 0' }}>
+                          <img 
+                            src={product.image_url} 
+                            alt={product.name}
+                            style={{ 
+                              width: '100%', 
+                              height: '150px', 
+                              objectFit: 'cover', 
+                              borderRadius: '8px' 
+                            }}
+                            onError={handleImageError}
+                          />
+                        </div>
+                      )}
+                      
+                      <div className="product-content">
+                        <h3 className="product-title">{product.name}</h3>
+                        <p className="product-description">
+                          {product.description}
+                        </p>
+                        
+                        <button 
+                          className="product-price-btn"
+                          disabled={!product.is_available}
+                          style={{
+                            opacity: product.is_available ? 1 : 0.6,
+                            cursor: product.is_available ? 'pointer' : 'not-allowed'
+                          }}
+                        >
+                          {product.is_available ? 'Explore' : 'Coming Soon'}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </section>
+
           {/* Partners Section */}
           <section className="partners-section">
             <div className="partners-container">
@@ -526,6 +648,7 @@ const AmoriaOriginalServices = [
               </div>
             </div>
           </section>
+
           {/* Services Section */}
           <section className="services-section" id="services-section">
             <div className="services-header">
@@ -551,7 +674,7 @@ const AmoriaOriginalServices = [
                   transition: isTransitioning ? 'transform 0.5s ease-in-out' : 'none'
                 }}
               >
-                {services.map((service, index) => (
+                {services.map((service: Service, index: number) => (
                   <div key={`${service.title}-${index}`} className="service-card">
                     <div className="service-icon">
                       <span>{service.icon}</span>
@@ -560,7 +683,7 @@ const AmoriaOriginalServices = [
                       <h3 className="service-title">{service.title}</h3>
                       <p className="service-description">{service.description}</p>
                       <ul className="service-features">
-                        {service.features.map((feature, i) => (
+                        {service.features.map((feature: string, i: number) => (
                           <li key={i} className="service-feature">
                             <span className="feature-dot">•</span>
                             {feature}
@@ -582,7 +705,7 @@ const AmoriaOriginalServices = [
 
             {/* Slide Indicators */}
             <div className="slide-indicators">
-              {originalServices.map((_, index) => (
+              {originalServices.map((_: Service, index: number) => (
                 <button
                   key={index}
                   className={`indicator ${index === (currentSlide % originalServices.length) ? 'active' : ''}`}
@@ -591,67 +714,6 @@ const AmoriaOriginalServices = [
               ))}
             </div>
           </section>
-
-          {/* Pricing Section - Commented Out */}
-          {/*
-          <section className="pricing-section" id="pricing-section">
-            <div className="pricing-header">
-              <h1 className="pricing-title">Choose the right plan for your business</h1>
-              
-              <div className="billing-toggle">
-                <button 
-                  className={`toggle-btn ${billingCycle === 'monthly' ? 'active' : ''}`}
-                  onClick={() => setBillingCycle('monthly')}
-                >
-                  Monthly
-                </button>
-                <button 
-                  className={`toggle-btn ${billingCycle === 'yearly' ? 'active' : ''}`}
-                  onClick={() => setBillingCycle('yearly')}
-                >
-                  Yearly
-                </button>
-              </div>
-            </div>
-
-            <div className="pricing-grid">
-              {plans.map((plan) => (
-                <div key={plan.name} className={`pricing-card ${plan.popular ? 'popular' : ''}`}>
-                  {plan.popular && (
-                    <div className="popular-badge">MOST POPULAR</div>
-                  )}
-                  
-                  <div className="card-header">
-                    <h3 className="plan-name">{plan.name}</h3>
-                    <p className="plan-description">{plan.description}</p>
-                  </div>
-
-                  <div className="price-container">
-                    <span className="price">
-                      ${billingCycle === 'monthly' ? plan.monthlyPrice : plan.yearlyPrice}
-                    </span>
-                    <span className="price-period">
-                      / {billingCycle === 'monthly' ? 'Monthly' : 'Yearly'}
-                    </span>
-                  </div>
-
-                  <ul className="features-list">
-                    {plan.features.map((feature, index) => (
-                      <li key={index} className="feature-item">
-                        <span className="feature-check">✓</span>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <button className={`cta-button ${plan.popular ? 'popular-btn' : ''}`}>
-                    {plan.name === 'Pro' ? 'Explore Live Demo' : 'Start free trial'} →
-                  </button>
-                </div>
-              ))}
-            </div>
-          </section>
-          */}
         </div>
       </main>
 

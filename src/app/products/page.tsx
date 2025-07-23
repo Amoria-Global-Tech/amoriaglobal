@@ -5,31 +5,71 @@ import Chatbot from '../components/Chatbot';
 import Navbar from '../components/navbar';
 import Footer from '../components/footer';
 
+// Type definitions
+interface Product {
+  id: string | number;
+  name: string;
+  description: string;
+  category: string;
+  price?: string | number;
+  image_url?: string;
+  is_available: boolean;
+}
+
+interface ApiResponse {
+  products?: Product[];
+}
+
 export default function ProductsPage() {
-
-  const products = [
-    {
-      title: 'Amoria Connect',
-      description: 'Connect people globally through virtual events including weddings, concerts, conferences, and celebrations for those unable to attend in person.',
-      icon: '🎪',
-      features: ['Virtual event hosting', 'Global connectivity', 'HD streaming quality', 'Interactive participation'],
-      fullDescription: 'Our comprehensive virtual event platform enables you to host all kinds of events online including weddings, concerts, conferences, and special celebrations, connecting people who are unable to attend them physically.'
-    }
-  ];
-
-  const [showScrollTop, setShowScrollTop] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
+  const [mounted, setMounted] = useState<boolean>(false);
 
   // Handle mounting to prevent hydration mismatch
-  useEffect(() => {
+  useEffect((): void => {
     setMounted(true);
   }, []);
 
+  // Fetch products from API
+  useEffect((): void => {
+    const fetchProducts = async (): Promise<void> => {
+      try {
+        setLoading(true);
+        const response: Response = await fetch('/api/products');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data: Product[] | ApiResponse = await response.json();
+        
+        // Handle different API response formats
+        if (Array.isArray(data)) {
+          setProducts(data);
+        } else if (data && 'products' in data && Array.isArray(data.products)) {
+          setProducts(data.products);
+        } else {
+          setProducts([]);
+        }
+      } catch (err: unknown) {
+        console.error('Error fetching products:', err);
+        const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+        setError(`Failed to load products: ${errorMessage}. Please try again later.`);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   // Show/hide scroll-to-top button - only after component is mounted
-  useEffect(() => {
+  useEffect((): (() => void) | void => {
     if (!mounted) return;
 
-    const handleScroll = () => {
+    const handleScroll = (): void => {
       if (window.scrollY > 300) {
         setShowScrollTop(true);
       } else {
@@ -41,16 +81,44 @@ export default function ProductsPage() {
     handleScroll();
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    return (): void => window.removeEventListener('scroll', handleScroll);
   }, [mounted]);
 
   // Scroll to top function
-  const scrollToTop = () => {
+  const scrollToTop = (): void => {
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
     });
   };
+
+  // Helper function to get product icon based on category or name
+  const getProductIcon = (product: Product): string => {
+    if (product.category === 'Photo & Video') return '🎪';
+    if (product.name.toLowerCase().includes('connect')) return '🎪';
+    return '📦'; // Default icon
+  };
+
+  /* Helper function to generate features based on product data
+  const getProductFeatures = (product: Product): string[] => {
+    if (product.name.toLowerCase().includes('connect')) {
+      return ['Virtual event hosting', 'Global connectivity', 'HD streaming quality', 'Interactive participation'];
+    }
+    return ['Feature 1', 'Feature 2', 'Feature 3', 'Feature 4']; // Default features
+  };
+  // Format price display
+  const formatPrice = (price: string | number): string => {
+    const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
+    return numericPrice.toLocaleString();
+  };
+  */
+  // Handle image error
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>): void => {
+    const target = e.target as HTMLImageElement;
+    target.style.display = 'none';
+  };
+
+  
 
   // Don't render until mounted
   if (!mounted) {
@@ -59,7 +127,7 @@ export default function ProductsPage() {
 
   return (
     <>
-     <Navbar />
+      <Navbar />
       {/* Main Content */}
       <main className="main-content">
         <div className="container">
@@ -74,37 +142,71 @@ export default function ProductsPage() {
 
           {/* Products Grid */}
           <section className="products-page-grid-section">
-            <div className="products-page-grid">
-              {products.map((product, index) => (
-                <div key={index} className="product-page-card">
-                  <div className="product-page-header">
-                    <div className="product-page-icon">
-                      <span>{product.icon}</span>
+            {loading && (
+              <div className="loading-container" style={{ textAlign: 'center', padding: '2rem' }}>
+                <p style={{ color: 'white', fontSize: '1.1rem' }}>Loading products...</p>
+              </div>
+            )}
+
+            {error && (
+              <div className="error-container" style={{ textAlign: 'center', padding: '2rem' }}>
+                <p style={{ color: '#ff6b6b', fontSize: '1.1rem' }}>{error}</p>
+              </div>
+            )}
+
+            {!loading && !error && products.length === 0 && (
+              <div className="no-products-container" style={{ textAlign: 'center', padding: '2rem' }}>
+                <p style={{ color: 'white', fontSize: '1.1rem' }}>No products available at the moment.</p>
+              </div>
+            )}
+
+            {/* Products Grid */}
+              {!loading && !error && products.length > 0 && (
+                <div className="products-grid">
+                  {products.map((product: Product) => (
+                    <div key={product.id} className="product-card">
+                      <div className="product-icon">
+                        <span>{getProductIcon(product)}</span>
+                      </div>
+                      
+                      {/* Product Image */}
+                      {product.image_url && (
+                        <div className="product-image" style={{ margin: '1rem 0' }}>
+                          <img 
+                            src={product.image_url} 
+                            alt={product.name}
+                            style={{ 
+                              width: '100%', 
+                              height: '150px', 
+                              objectFit: 'cover', 
+                              borderRadius: '8px' 
+                            }}
+                            onError={handleImageError}
+                          />
+                        </div>
+                      )}
+                      
+                      <div className="product-content">
+                        <h3 className="product-title">{product.name}</h3>
+                        <p className="product-description">
+                          {product.description}
+                        </p>
+                        
+                        <button 
+                          className="product-price-btn"
+                          disabled={!product.is_available}
+                          style={{
+                            opacity: product.is_available ? 1 : 0.6,
+                            cursor: product.is_available ? 'pointer' : 'not-allowed'
+                          }}
+                        >
+                          {product.is_available ? 'Explore' : 'Coming Soon'}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                  
-                  <div className="product-page-content">
-                    <h3 className="product-page-title">{product.title}</h3>
-                    <p className="product-page-description">{product.fullDescription}</p>
-                    
-                    <ul className="product-page-features">
-                      {product.features.map((feature, i) => (
-                        <li key={i} className="product-page-feature">
-                          <span className="feature-check">✓</span>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                    
-                    <div className="product-page-buttons">
-                      <button className="product-buy-btn">
-                        Explore
-                      </button>
-                    </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              )}
           </section>
 
           {/* Call to Action Section */}
