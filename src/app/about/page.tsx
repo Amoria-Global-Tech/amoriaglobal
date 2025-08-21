@@ -138,9 +138,28 @@ export default function AboutPage() {
                 </div>
                 <div className="team-info">
                   <h3 className="team-name">Moses Mirarayi</h3>
-                  <p className="team-title-job">Managing Director</p>
+                  <p className="team-title-job">Head of Operations</p>
                   <p className="team-description-text">
-                    Passionate and results driven  in technology and operational excellence. Dedicated to delivering seamless project execution, driving innovation, and ensuring exceptional client satisfaction. Focused on efficiency, quality, and continuous improvement to help organizations unlock the full potential of technology for sustainable growth and long term success.
+                    Operations excellence leader ensuring seamless project delivery and client satisfaction.
+                  </p>
+                </div>
+              </div>
+
+              <div className="team-card">
+                <div className="team-image-container">
+                  <Image 
+                    src="/team/peace_muzirankoni.jpg" 
+                    alt="Peace Muzirankoni" 
+                    width={120} 
+                    height={120}
+                    className="team-image"
+                  />
+                </div>
+                <div className="team-info">
+                  <h3 className="team-name">Peace Muzirankoni</h3>
+                  <p className="team-title-job">Customer Service and Relations Officer</p>
+                  <p className="team-description-text">
+                    Manages client inquiries, ensures timely professional responses, maintains customer satisfaction, and supports relationship-building as the primary client contact
                   </p>
                 </div>
               </div>
