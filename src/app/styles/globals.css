@@ -1018,19 +1018,15 @@ body::before {
 .product-description {
   color: var(--text-gray);
   line-height: 1.5;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   flex-grow: 1;
   font-size: 0.875rem;
 }
 
 /* Missing CSS for the button */
 .product-price-btn {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
   min-width: 100px;
-  padding: 0.75rem 1.5rem;
+  padding: 0rem 1.5rem;
   border-radius: 25px;
   background: var(--gradient-secondary);
   color: var(--text-white);
@@ -1041,7 +1037,7 @@ body::before {
   cursor: pointer;
   transition: all 0.3s ease;
   flex: 1;
-  margin-top: auto;
+  margin-top: 20px;
 }
 .product-price-btn::before {
   content: '';
