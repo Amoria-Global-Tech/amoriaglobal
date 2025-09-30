@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Chatbot from './components/Chatbot';
 import Navbar from './components/navbar';
 import Footer from './components/footer';
+import { api } from './api/utils/apiService';
 
 // Type definitions
 interface Product {
@@ -12,8 +13,9 @@ interface Product {
   description: string;
   category: string;
   price?: string | number;
-  image_url?: string;
-  is_available: boolean;
+  imageUrl?: string;
+  isAvailable: boolean;
+  siteUrl?: string;
 }
 
 interface Service {
@@ -115,24 +117,24 @@ export default function HomePage() {
     }
   ];
 
-  // Fetch products from API
+// Fetch products from API
   useEffect((): void => {
     const fetchProducts = async (): Promise<void> => {
       try {
         setProductsLoading(true);
-        const response: Response = await fetch('/api/products');
+        const response: Response | any = await api.get('/admin/content/products');
         
-        if (!response.ok) {
+        if (!response.data.success) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         
-        const data: Product[] | ApiResponse = await response.json();
+        const data: Product[] | ApiResponse | any = await response.data;
         
         // Handle different API response formats
         if (Array.isArray(data)) {
           setProducts(data);
-        } else if (data && 'products' in data && Array.isArray(data.products)) {
-          setProducts(data.products);
+        } else if (Array.isArray(data.data)) {
+          setProducts(data.data);
         } else {
           setProducts([]);
         }
@@ -162,12 +164,6 @@ export default function HomePage() {
     const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
     return numericPrice.toLocaleString();
   }; */
-
-  // Handle image error
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>): void => {
-    const target = e.target as HTMLImageElement;
-    target.style.display = 'none';
-  };
 
   // Initial client-side mount
   useEffect((): void => {
@@ -390,6 +386,19 @@ export default function HomePage() {
     }
   };
 
+    // Handle image error - show placeholder
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>): void => {
+    const target = e.target as HTMLImageElement;
+    target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect fill="%23667" width="200" height="200"/%3E%3Ctext fill="rgba(255,255,255,0.5)" font-family="sans-serif" font-size="16" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
+  };
+
+  // Handle explore click
+  const handleExploreClick = (siteUrl?: string): void => {
+    if (siteUrl) {
+      window.open(siteUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   // Globe Preloader Component - only show when ready and not mounted and hasn't been shown before
   if (!mounted && !hasShownPreloader && isClient) {
     // Show minimal loading state until preloader is ready
@@ -537,53 +546,96 @@ export default function HomePage() {
                 </div>
               )}
 
-              {/* Products Grid */}
-              {!productsLoading && !productsError && products.length > 0 && (
-                <div className="products-grid">
-                  {products.map((product: Product) => (
-                    <div key={product.id} className="product-card">
-                      <div className="product-icon">
-                        <span>{getProductIcon(product)}</span>
-                      </div>
+               {/* Products Grid */}
+            {!productsLoading && !productsError && products.length > 0 && (
+              <div className="products-grid" style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                gap: '1.5rem',
+                padding: '1rem 0'
+              }}>
+                {products.map((product: Product) => (
+                  <div key={product.id} className="product-card" style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '100%',
+                    position: 'relative'
+                  }}>
+                    {/* Product Image */}
+                    <div className="product-image" style={{ 
+                      margin: '0',
+                      overflow: 'hidden',
+                      borderRadius: '8px 8px 0 0',
+                      flexShrink: 0
+                    }}>
+                      <img 
+                        src={product.imageUrl || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="150"%3E%3Crect fill="%23667" width="200" height="150"/%3E%3Ctext fill="rgba(255,255,255,0.5)" font-family="sans-serif" font-size="16" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3ENo Image%3C/text%3E%3C/svg%3E'} 
+                        alt={product.name}
+                        style={{ 
+                          width: '100%', 
+                          height: '140px', 
+                          objectFit: 'contain',
+                          display: 'block'
+                        }}
+                        onError={handleImageError}
+                      />
+                    </div>
+                    
+                    <div className="product-content" style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      flex: '1',
+                      padding: '1.5rem',
+                      gap: '0.75rem',
+                      position: 'relative'
+                    }}>
+                      <h3 className="product-title" style={{ 
+                        margin: '0 0 0.5rem 0',
+                        position: 'relative'
+                      }}>{product.name}</h3>
                       
-                      {/* Product Image */}
-                      {product.image_url && (
-                        <div className="product-image" style={{ margin: '1rem 0' }}>
-                          <img 
-                            src={product.image_url} 
-                            alt={product.name}
-                            style={{ 
-                              width: '100%', 
-                              height: '150px', 
-                              objectFit: 'cover', 
-                              borderRadius: '8px' 
-                            }}
-                            onError={handleImageError}
-                          />
-                        </div>
-                      )}
-                      
-                      <div className="product-content">
-                        <h3 className="product-title">{product.name}</h3>
-                        <p className="product-description">
+                      {/* Show description only if available */}
+                      {product.isAvailable ? (
+                        <p className="product-description" style={{
+                          flex: '1',
+                          margin: '0 0 1rem 0',
+                          position: 'relative',
+                          minHeight: '3.5rem'
+                        }}>
                           {product.description}
                         </p>
-                        
-                        <button 
-                          className="product-price-btn"
-                          disabled={!product.is_available}
-                          style={{
-                            opacity: product.is_available ? 1 : 0.6,
-                            cursor: product.is_available ? 'pointer' : 'not-allowed'
-                          }}
-                        >
-                          {product.is_available ? 'Explore' : 'Coming Soon'}
-                        </button>
-                      </div>
+                      ) : (
+                        <p className="product-description" style={{ 
+                          color: '#fbbf24', 
+                          fontWeight: '500',
+                          fontStyle: 'italic',
+                          flex: '1',
+                          margin: '0 0 1rem 0',
+                          position: 'relative',
+                          minHeight: '3rem'
+                        }}>
+                          Coming Soon
+                        </p>
+                      )}
+                      
+                      {/* Button - clickable if available and has siteUrl */}
+                      <button 
+                        className="product-price-btn"
+                        onClick={() => product.isAvailable && handleExploreClick(product.siteUrl)}
+                        disabled={!product.isAvailable}
+                        style={{
+                          opacity: product.isAvailable ? 1 : 0.6,
+                          cursor: product.isAvailable && product.siteUrl ? 'pointer' : 'not-allowed',
+                          marginTop: 'auto',
+                        }}
+                      >
+                        {product.isAvailable ? 'Explore' : 'Coming Soon'}
+                      </button>
                     </div>
-                  ))}
-                </div>
-              )}
+                  </div>
+                ))}
+              </div>
+            )}
             </div>
           </section>
 
